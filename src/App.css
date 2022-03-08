@@ -29,38 +29,3 @@ main {
 h1 {
     text-align: center;
 }
-
-.count {
-    text-align: center;
-}
-
-.count button {
-    padding: 4px 20px;
-    font-size: 16px;
-    background-color: #393939;
-    color: white;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition-property: background-color, color;
-    transition-duration: 200ms;
-    transition-timing-function: ease-out;
-}
-
-.count button:hover {
-    background-color: #656161;
-}
-
-footer {
-    height: 50px;
-    background-color: #393939;
-    display: flex;
-    align-items: center;
-    justify-content: center
-}
-
-footer span {
-    vertical-align: middle;
-    font-weight: 400;
-    font-size: 18px;
-    color: white
-}

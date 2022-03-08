@@ -33,7 +33,7 @@ const Content = () => {
           </p>
         </div>
       </div>
-      <div className="count">
+      <div className={styles.count}>
         <button>Get amount of posts</button>
       </div>
     </>
