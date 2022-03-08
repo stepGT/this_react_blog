@@ -1,4 +1,5 @@
 import { posts } from '../../data/data';
+import Posts from './components/Posts/Posts';
 import styles from './Content.module.css';
 
 const Content = () => {
@@ -6,17 +7,13 @@ const Content = () => {
     <>
       <h1>Simple Blog</h1>
       <div className="posts">
-        {posts.map((post) => {
-          return (
-            <div key={post.id} className="post">
-              <h2>{post.title}</h2>
-              <p>{post.description}</p>
-            </div>
-          );
-        })}
-      </div>
-      <div className={styles.count}>
-        <button>Get amount of posts</button>
+        {posts.map((post) => (
+          <Posts
+            key={post.id}
+            title={post.title}
+            description={post.description}
+          />
+        ))}
       </div>
     </>
   );
