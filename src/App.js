@@ -4,13 +4,14 @@ import Content from './components/Content';
 import Footer from './components/Footer/Footer';
 
 const App = () => {
+  const year = new Date().getFullYear();
   return (
     <div className="App">
       <Header />
       <main>
         <Content />
       </main>
-      <Footer />
+      <Footer year={ year } />
     </div>
   );
 };
