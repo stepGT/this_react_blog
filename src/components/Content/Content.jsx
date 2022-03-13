@@ -8,7 +8,7 @@ const Content = () => {
   const setLike = (postID) => {
     setArrPosts((state) =>
       state.map((item) =>
-        item.id === postID ? { ...item, like: item.like++ } : item
+        item.id === postID ? { ...item, liked: !item.liked } : item
       )
     );
   };
@@ -22,7 +22,7 @@ const Content = () => {
               key={post.id}
               title={post.title}
               description={post.description}
-              like={post.like}
+              liked={post.liked}
               setLike={() => setLike(post.id)}
             />
           ))}
