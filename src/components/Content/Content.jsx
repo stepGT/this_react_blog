@@ -1,19 +1,31 @@
+import { useState } from 'react';
 import { posts } from '../../data/data';
 import Posts from './components/Posts/Posts';
 import styles from './Content.module.css';
 
 const Content = () => {
+  const [arrPosts, setArrPosts] = useState(posts);
+  const setLike = (postID) => {
+    setArrPosts((state) =>
+      state.map((item) =>
+        item.id === postID ? { ...item, like: item.like++ } : item
+      )
+    );
+  };
   return (
     <>
       <h1>Simple Blog</h1>
       <div className="posts">
-        {posts.map((post) => (
-          <Posts
-            key={post.id}
-            title={post.title}
-            description={post.description}
-          />
-        ))}
+        {arrPosts &&
+          arrPosts.map((post, ind) => (
+            <Posts
+              key={post.id}
+              title={post.title}
+              description={post.description}
+              like={post.like}
+              setLike={() => setLike(post.id)}
+            />
+          ))}
       </div>
     </>
   );
