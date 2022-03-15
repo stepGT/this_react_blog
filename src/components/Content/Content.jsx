@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { posts } from '../../data/data';
 import Posts from './components/Posts/Posts';
 import styles from './Content.module.css';
 
 const Content = () => {
-  const [arrPosts, setArrPosts] = useState(posts);
+  const [arrPosts, setArrPosts] = useState(
+    JSON.parse(localStorage.getItem('arrPosts')) || posts
+  );
+  useEffect(() => {
+    localStorage.setItem('arrPosts', JSON.stringify(arrPosts));
+  }, [arrPosts]);
   const setLike = (postID) => {
     setArrPosts((state) =>
       state.map((item) =>
