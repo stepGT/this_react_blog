@@ -1,0 +1,9 @@
+.post {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+button:hover {
+    background: none !important;
+}

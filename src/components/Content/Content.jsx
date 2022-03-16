@@ -17,6 +17,9 @@ const Content = () => {
       )
     );
   };
+  const deletePost = (postID) => {
+    setArrPosts((state) => state.filter((item) => item.id !== postID));
+  };
   return (
     <>
       <h1>Simple Blog</h1>
@@ -29,6 +32,7 @@ const Content = () => {
               description={post.description}
               liked={post.liked}
               setLike={() => setLike(post.id)}
+              deletePost={() => deletePost(post.id)}
             />
           ))}
       </div>
