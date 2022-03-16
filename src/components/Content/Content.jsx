@@ -4,9 +4,12 @@ import Posts from './components/Posts/Posts';
 import styles from './Content.module.css';
 
 const Content = () => {
-  const [arrPosts, setArrPosts] = useState(
-    JSON.parse(localStorage.getItem('arrPosts')) || posts
-  );
+  const storage =
+    JSON.parse(localStorage.getItem('arrPosts')) &&
+    JSON.parse(localStorage.getItem('arrPosts')).length !== 0
+      ? JSON.parse(localStorage.getItem('arrPosts'))
+      : posts;
+  const [arrPosts, setArrPosts] = useState(storage);
   useEffect(() => {
     localStorage.setItem('arrPosts', JSON.stringify(arrPosts));
   }, [arrPosts]);
