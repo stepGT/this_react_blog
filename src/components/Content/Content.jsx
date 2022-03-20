@@ -3,9 +3,14 @@ import { posts } from '../../data/data';
 import PostForm from './components/PostForm/PostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
-import styles from './Content.module.css';
 
 const Content = () => {
+  const storage =
+    JSON.parse(localStorage.getItem('arrPosts')) &&
+    JSON.parse(localStorage.getItem('arrPosts')).length !== 0
+      ? JSON.parse(localStorage.getItem('arrPosts'))
+      : posts;
+  const [arrPosts, setArrPosts] = useState(storage);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -16,7 +21,13 @@ const Content = () => {
   };
 
   const handleSubmit = () => {
-    console.log('handleSubmit');
+    const newPost = {
+      id: arrPosts.length + 1,
+      title: title,
+      description: content,
+      liked: false,
+    };
+    setArrPosts(state => [...state, newPost]);
     setOpen(false);
   };
 
@@ -25,15 +36,6 @@ const Content = () => {
     setOpen(false);
   };
 
-  const storage =
-    JSON.parse(localStorage.getItem('arrPosts')) &&
-    JSON.parse(localStorage.getItem('arrPosts')).length !== 0
-      ? JSON.parse(localStorage.getItem('arrPosts'))
-      : posts;
-  const [arrPosts, setArrPosts] = useState(storage);
-  useEffect(() => {
-    localStorage.setItem('arrPosts', JSON.stringify(arrPosts));
-  }, [arrPosts]);
   const setLike = (postID) => {
     setArrPosts((state) =>
       state.map((item) =>
@@ -41,15 +43,22 @@ const Content = () => {
       )
     );
   };
+
   const deletePost = (postID) => {
     setArrPosts((state) => state.filter((item) => item.id !== postID));
   };
+
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   }
+
   const onChangeContent = (e) => {
     setContent(e.target.value);
   }
+
+  useEffect(() => {
+    localStorage.setItem('arrPosts', JSON.stringify(arrPosts));
+  }, [arrPosts]);
   return (
     <>
       <Button onClick={handleAddPost} size="large" variant="contained">
@@ -69,7 +78,7 @@ const Content = () => {
         {arrPosts &&
           arrPosts.map((post, ind) => (
             <Posts
-              key={post.id}
+              key={ind}
               title={post.title}
               description={post.description}
               liked={post.liked}
