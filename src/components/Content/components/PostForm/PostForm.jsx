@@ -30,8 +30,7 @@ const PostForm = ({
         >
           <CloseIcon onClick={handleClose} className={styles.svgClose} />
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <Box className={styles.postForm} component="form">
+            <Box className={styles.postForm} component="form">
                 <Typography variant="h4" component="div" gutterBottom>
                   Create post
                 </Typography>
@@ -54,7 +53,6 @@ const PostForm = ({
                   />
                 </FormControl>
               </Box>
-            </DialogContentText>
           </DialogContent>
           <DialogActions className={styles.postFormSubmit}>
             <Button onClick={handleSubmit} size="large" variant="contained">
