@@ -1,9 +1,28 @@
 import { useState, useEffect } from 'react';
 import { posts } from '../../data/data';
+import PostForm from './components/PostForm/PostForm';
 import Posts from './components/Posts/Posts';
+import Button from '@mui/material/Button';
 import styles from './Content.module.css';
 
 const Content = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleAddPost = () => {
+    console.log('handleAddPost');
+    setOpen(true);
+  };
+
+  const handleSubmit = () => {
+    console.log('handleSubmit');
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    console.log('handleClose');
+    setOpen(false);
+  };
+
   const storage =
     JSON.parse(localStorage.getItem('arrPosts')) &&
     JSON.parse(localStorage.getItem('arrPosts')).length !== 0
@@ -25,6 +44,14 @@ const Content = () => {
   };
   return (
     <>
+      <Button onClick={handleAddPost} size="large" variant="contained">
+        Add post
+      </Button>
+      <PostForm
+        handleSubmit={handleSubmit}
+        handleClose={handleClose}
+        open={open}
+      />
       <h1>Simple Blog</h1>
       <div className="posts">
         {arrPosts &&
