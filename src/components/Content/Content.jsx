@@ -7,6 +7,8 @@ import styles from './Content.module.css';
 
 const Content = () => {
   const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const handleAddPost = () => {
     console.log('handleAddPost');
@@ -42,6 +44,12 @@ const Content = () => {
   const deletePost = (postID) => {
     setArrPosts((state) => state.filter((item) => item.id !== postID));
   };
+  const onChangeTitle = (e) => {
+    setTitle(e.target.value);
+  }
+  const onChangeContent = (e) => {
+    setContent(e.target.value);
+  }
   return (
     <>
       <Button onClick={handleAddPost} size="large" variant="contained">
@@ -51,6 +59,10 @@ const Content = () => {
         handleSubmit={handleSubmit}
         handleClose={handleClose}
         open={open}
+        title={title}
+        onChangeTitle={onChangeTitle}
+        content={content}
+        onChangeContent={onChangeContent}
       />
       <h1>Simple Blog</h1>
       <div className="posts">

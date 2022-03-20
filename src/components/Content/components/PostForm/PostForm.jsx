@@ -1,7 +1,6 @@
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import styles from './PostForm.module.css';
@@ -11,7 +10,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import CloseIcon from '@mui/icons-material/Close';
 
-const PostForm = ({ open, handleSubmit, handleClose }) => {
+const PostForm = ({
+  open,
+  handleSubmit,
+  handleClose,
+  title,
+  onChangeTitle,
+  content,
+  onChangeContent,
+}) => {
   return (
     open && (
       <>
@@ -34,14 +41,16 @@ const PostForm = ({ open, handleSubmit, handleClose }) => {
                     id="outlined-basic"
                     label="Post title"
                     variant="outlined"
+                    value={title}
+                    onChange={onChangeTitle}
                   />
-                  <TextareaAutosize
-                    className={styles.postFormContent}
-                    minRows={6}
-                    aria-label="Post content"
-                    placeholder="Post content"
-                    defaultValue=""
-                    style={{ width: '100%' }}
+                  <TextField
+                    id="outlined-multiline-static"
+                    label="Post content"
+                    multiline
+                    rows={5}
+                    value={content}
+                    onChange={onChangeContent}
                   />
                 </FormControl>
               </Box>
