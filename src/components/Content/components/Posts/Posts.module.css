@@ -4,6 +4,14 @@
     justify-content: space-between;
 }
 
-button:hover {
+.post button:hover {
     background: none !important;
+}
+
+.post button {
+    outline: unset;
+    border: none;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    background: transparent;
 }
