@@ -21,14 +21,20 @@ const Content = () => {
   };
 
   const handleSubmit = () => {
-    const newPost = {
-      id: arrPosts.length + 1,
-      title: title,
-      description: content,
-      liked: false,
-    };
-    setArrPosts(state => [...state, newPost]);
-    setOpen(false);
+    if (title && content) {
+      const newPost = {
+        id: arrPosts.length + 1,
+        title: title,
+        description: content,
+        liked: false,
+      };
+      setArrPosts((state) => [...state, newPost]);
+      setOpen(false);
+      setTitle('');
+      setContent('');
+    } else {
+      setOpen(true);
+    }
   };
 
   const handleClose = () => {
