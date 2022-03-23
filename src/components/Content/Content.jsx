@@ -18,6 +18,7 @@ const Content = () => {
   const handleSubmit = () => {
     if (title && content) {
       const newPost = {
+        id: arrPosts.length + 1,
         title: title,
         description: content,
         liked: false,
@@ -37,13 +38,13 @@ const Content = () => {
     setOpen(false);
   };
 
-  const setLike = (postID, liked) => {
-    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${postID}`, {
-      liked: !liked,
+  const setLike = post => {
+    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${post.id}`, {
+      liked: !post.liked,
     });
     setArrPosts((state) => {
       return state.map((post) =>
-        postID === post.id ? { ...post, liked: !liked } : post
+        post.id === post.id ? { ...post, liked: !post.liked } : post
       );
     });
   };
@@ -95,7 +96,7 @@ const Content = () => {
               title={post.title}
               description={post.description}
               liked={post.liked}
-              setLike={() => setLike(post.id, post.liked)}
+              setLike={() => setLike(post)}
               deletePost={() => deletePost(post.id)}
             />
           ))}
