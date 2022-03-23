@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
-import { posts } from '../../data/data';
+import axios from 'axios';
 import PostForm from './components/PostForm/PostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
 
 const Content = () => {
-  const storage =
-    JSON.parse(localStorage.getItem('arrPosts')) &&
-    JSON.parse(localStorage.getItem('arrPosts')).length !== 0
-      ? JSON.parse(localStorage.getItem('arrPosts'))
-      : posts;
-  const [arrPosts, setArrPosts] = useState(storage);
+  const [arrPosts, setArrPosts] = useState([]);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -42,16 +37,24 @@ const Content = () => {
     setOpen(false);
   };
 
-  const setLike = (postID) => {
-    setArrPosts((state) =>
-      state.map((item) =>
-        item.id === postID ? { ...item, liked: !item.liked } : item
-      )
-    );
+  const setLike = (postID, liked) => {
+    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${postID}`, {
+      liked: !liked,
+    });
+    setArrPosts((state) => {
+      return state.map((post) =>
+        postID === post.id ? { ...post, liked: !liked } : post
+      );
+    });
   };
 
   const deletePost = (postID) => {
-    setArrPosts((state) => state.filter((item) => item.id !== postID));
+    axios.delete(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${postID}`);
+    setArrPosts((state) => {
+      return state.filter(post => {
+        return postID !== post.id
+      });
+    });
   };
 
   const onChangeTitle = (e) => {
@@ -63,8 +66,12 @@ const Content = () => {
   }
 
   useEffect(() => {
-    localStorage.setItem('arrPosts', JSON.stringify(arrPosts));
-  }, [arrPosts]);
+    axios
+      .get('https://6237218ab08c39a3af7db13a.mockapi.io/posts')
+      .then(res => setArrPosts(res.data))
+      .catch((err) => {});
+  }, []);
+
   return (
     <>
       <Button onClick={handleAddPost} size="large" variant="contained">
@@ -88,7 +95,7 @@ const Content = () => {
               title={post.title}
               description={post.description}
               liked={post.liked}
-              setLike={() => setLike(post.id)}
+              setLike={() => setLike(post.id, post.liked)}
               deletePost={() => deletePost(post.id)}
             />
           ))}
