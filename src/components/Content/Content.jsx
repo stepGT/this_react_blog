@@ -38,13 +38,14 @@ const Content = () => {
     setOpen(false);
   };
 
-  const setLike = post => {
-    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${post.id}`, {
-      liked: !post.liked,
+  const setLike = obj => {
+    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${obj.id}`, {
+      ...obj,
+      liked: !obj.liked,
     });
     setArrPosts((state) => {
-      return state.map((post) =>
-        post.id === post.id ? { ...post, liked: !post.liked } : post
+      return state.map((el) =>
+        obj.id === el.id ? { ...el, liked: !el.liked } : el
       );
     });
   };
