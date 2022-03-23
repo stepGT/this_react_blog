@@ -18,12 +18,12 @@ const Content = () => {
   const handleSubmit = () => {
     if (title && content) {
       const newPost = {
-        id: arrPosts.length + 1,
         title: title,
         description: content,
         liked: false,
       };
       setArrPosts((state) => [...state, newPost]);
+      axios.post('https://6237218ab08c39a3af7db13a.mockapi.io/posts', newPost);
       setOpen(false);
       setTitle('');
       setContent('');
