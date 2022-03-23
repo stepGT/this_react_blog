@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styles from './Posts.module.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';

@@ -1,0 +1,22 @@
+.postForm {
+    text-align: center;
+}
+
+.postForm .postFormTitle {
+    margin-bottom: 10%;
+}
+
+.postForm .postFormContent {
+    margin-bottom: 10%;
+}
+
+.postFormSubmit {
+    justify-content: center !important;
+    padding-top: 0 !important;
+}
+
+.svgClose {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+}
