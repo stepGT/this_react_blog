@@ -3,12 +3,14 @@ import axios from 'axios';
 import PostForm from './components/PostForm/PostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
+import Preloader from '../Preloader';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isFetch, setIsFetch] = useState(true);
 
   const handleAddPost = () => {
     console.log('handleAddPost');
@@ -70,7 +72,10 @@ const Content = () => {
   useEffect(() => {
     axios
       .get('https://6237218ab08c39a3af7db13a.mockapi.io/posts')
-      .then(res => setArrPosts(res.data))
+      .then((res) => {
+        setArrPosts(res.data);
+        setIsFetch(false);
+      })
       .catch((err) => {});
   }, []);
 
@@ -90,6 +95,7 @@ const Content = () => {
       />
       <h1>Simple Blog</h1>
       <div className="posts">
+        {isFetch && <Preloader />}
         {arrPosts &&
           arrPosts.map((post, ind) => (
             <Posts
