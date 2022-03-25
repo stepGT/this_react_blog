@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
@@ -26,7 +26,7 @@ const Content = () => {
         liked: false,
       };
       setArrPosts((state) => [...state, newPost]);
-      axios.post('https://6237218ab08c39a3af7db13a.mockapi.io/posts', newPost);
+      API.post('/posts', newPost);
       setOpen(false);
       setTitle('');
       setContent('');
@@ -40,8 +40,8 @@ const Content = () => {
     setOpen(false);
   };
 
-  const setLike = obj => {
-    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${obj.id}`, {
+  const setLike = (obj) => {
+    API.put(`/posts/${obj.id}`, {
       ...obj,
       liked: !obj.liked,
     });
@@ -53,10 +53,10 @@ const Content = () => {
   };
 
   const deletePost = (postID) => {
-    axios.delete(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${postID}`);
+    API.delete(`/posts/${postID}`);
     setArrPosts((state) => {
-      return state.filter(post => {
-        return postID !== post.id
+      return state.filter((post) => {
+        return postID !== post.id;
       });
     });
   };
@@ -70,13 +70,11 @@ const Content = () => {
   }
 
   useEffect(() => {
-    axios
-      .get('https://6237218ab08c39a3af7db13a.mockapi.io/posts')
-      .then((res) => {
-        setArrPosts(res.data);
-        setIsFetch(false);
-      })
-      .catch((err) => {});
+    (async function () {
+      const response = await API.get('/posts');
+      setArrPosts(response.data);
+      setIsFetch(false);
+    })();
   }, []);
 
   return (
