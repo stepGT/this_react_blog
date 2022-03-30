@@ -12,6 +12,7 @@ const Content = () => {
   const [openEditForm, setOpenEditForm] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
+  const [editID, setEditID] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
   const [isFetch, setIsFetch] = useState(true);
@@ -39,8 +40,20 @@ const Content = () => {
   };
 
   const handleEditSubmit = () => {
-    console.log('handleEditSubmit');
-  }
+    const newPost = {
+      id: editID,
+      title: editTitle,
+      description: editContent,
+    };
+    API.put(`/posts/${editID}`, newPost);
+    setOpenEditForm(false);
+    //
+    setArrPosts((state) => {
+      return state.map((el) =>
+        editID === el.id ? { ...el, title: editTitle, description: editContent } : el
+      );
+    });
+  };
 
   const handlePostClose = () => {
     setOpenPostForm(false);
@@ -73,6 +86,7 @@ const Content = () => {
 
   const editPost = (post) => {
     setOpenEditForm(true);
+    setEditID(post.id);
     setEditTitle(post.title);
     setEditContent(post.description);
   };
@@ -81,9 +95,17 @@ const Content = () => {
     setPostTitle(e.target.value);
   }
 
+  const onChangeEditTitle = (e) => {
+    setEditTitle(e.target.value);
+  };
+
   const onChangeContent = (e) => {
     setPostContent(e.target.value);
   }
+
+  const onChangeEditContent = (e) => {
+    setEditContent(e.target.value);
+  };
 
   useEffect(() => {
     (async function () {
@@ -108,13 +130,14 @@ const Content = () => {
         onChangeContent={onChangeContent}
       />
       <EditPostForm
+        id={editID}
         handleSubmit={handleEditSubmit}
         handleClose={handleEditClose}
         open={openEditForm}
         title={editTitle}
-        onChangeTitle={() => {}}
+        onChangeTitle={onChangeEditTitle}
         content={editContent}
-        onChangeContent={() => {}}
+        onChangeContent={onChangeEditContent}
       />
       <h1>Simple Blog</h1>
       <div className="posts">
