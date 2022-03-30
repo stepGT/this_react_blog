@@ -21,12 +21,8 @@ const theme = createTheme({
   },
 });
 
-const Posts = ({ title, description, liked, setLike, deletePost }) => {
+const Posts = ({ title, description, liked, setLike, deletePost, editPost }) => {
   const [open, setOpen] = useState(false);
-
-  const handleClickEdit = (e) => {
-    console.log('handleClickEdit');
-  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -53,7 +49,7 @@ const Posts = ({ title, description, liked, setLike, deletePost }) => {
       <div className={styles.icons}>
         <ThemeProvider theme={theme}>
           <IconButton
-            onClick={handleClickEdit}
+            onClick={editPost}
             aria-label="edit"
             size="large"
             color="neutral"

@@ -1,44 +1,54 @@
 import { useState, useEffect } from 'react';
 import API from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
+import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
 import Preloader from '../Preloader';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [openPostForm, setOpenPostForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [postTitle, setPostTitle] = useState('');
+  const [postContent, setPostContent] = useState('');
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
   const [isFetch, setIsFetch] = useState(true);
 
   const handleAddPost = () => {
-    console.log('handleAddPost');
-    setOpen(true);
+    setOpenPostForm(true);
   };
 
-  const handleSubmit = () => {
-    if (title && content) {
+  const handlePostSubmit = () => {
+    if (postTitle && postContent) {
       const newPost = {
         id: arrPosts.length + 1,
-        title: title,
-        description: content,
+        title: postTitle,
+        description: postContent,
         liked: false,
       };
       setArrPosts((state) => [...state, newPost]);
       API.post('/posts', newPost);
-      setOpen(false);
-      setTitle('');
-      setContent('');
+      setOpenPostForm(false);
+      setPostTitle('');
+      setPostContent('');
     } else {
-      setOpen(true);
+      openPostForm(true);
     }
   };
 
-  const handleClose = () => {
-    console.log('handleClose');
-    setOpen(false);
+  const handleEditSubmit = () => {
+    console.log('handleEditSubmit');
+  }
+
+  const handlePostClose = () => {
+    setOpenPostForm(false);
   };
+
+  const handleEditClose = () => {
+    setOpenEditForm(false);
+  }
 
   const setLike = (obj) => {
     API.put(`/posts/${obj.id}`, {
@@ -61,12 +71,18 @@ const Content = () => {
     });
   };
 
+  const editPost = (post) => {
+    setOpenEditForm(true);
+    setEditTitle(post.title);
+    setEditContent(post.description);
+  };
+
   const onChangeTitle = (e) => {
-    setTitle(e.target.value);
+    setPostTitle(e.target.value);
   }
 
   const onChangeContent = (e) => {
-    setContent(e.target.value);
+    setPostContent(e.target.value);
   }
 
   useEffect(() => {
@@ -83,13 +99,22 @@ const Content = () => {
         Add post
       </Button>
       <PostForm
-        handleSubmit={handleSubmit}
-        handleClose={handleClose}
-        open={open}
-        title={title}
+        handleSubmit={handlePostSubmit}
+        handleClose={handlePostClose}
+        open={openPostForm}
+        title={postTitle}
         onChangeTitle={onChangeTitle}
-        content={content}
+        content={postContent}
         onChangeContent={onChangeContent}
+      />
+      <EditPostForm
+        handleSubmit={handleEditSubmit}
+        handleClose={handleEditClose}
+        open={openEditForm}
+        title={editTitle}
+        onChangeTitle={() => {}}
+        content={editContent}
+        onChangeContent={() => {}}
       />
       <h1>Simple Blog</h1>
       <div className="posts">
@@ -103,6 +128,7 @@ const Content = () => {
               liked={post.liked}
               setLike={() => setLike(post)}
               deletePost={() => deletePost(post.id)}
+              editPost={() => editPost(post)}
             />
           ))}
       </div>
