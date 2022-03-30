@@ -9,6 +9,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -19,9 +21,8 @@ const theme = createTheme({
   },
 });
 
-const Posts = ({ title, description, liked, setLike, deletePost }) => {
+const Posts = ({ title, description, liked, setLike, deletePost, editPost }) => {
   const [open, setOpen] = useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -40,19 +41,21 @@ const Posts = ({ title, description, liked, setLike, deletePost }) => {
   };
   const color = liked ? 'crimson' : 'black';
   return (
-    <div className={styles.post}>
+    <Box className={styles.post}>
       <div className={styles.postContent}>
         <h2>{title}</h2>
         <p>{description}</p>
-        <div>
-          <button onClick={setLike}>
-            <FavoriteIcon style={{ fill: color }} />
-          </button>
-        </div>
       </div>
-
-      <div>
+      <div className={styles.icons}>
         <ThemeProvider theme={theme}>
+          <IconButton
+            onClick={editPost}
+            aria-label="edit"
+            size="large"
+            color="neutral"
+          >
+            <EditIcon fontSize="inherit" />
+          </IconButton>
           <IconButton
             onClick={handleClickOpen}
             aria-label="delete"
@@ -60,6 +63,14 @@ const Posts = ({ title, description, liked, setLike, deletePost }) => {
             color="neutral"
           >
             <DeleteIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            onClick={setLike}
+            aria-label="favorite"
+            size="large"
+            color="neutral"
+          >
+            <FavoriteIcon style={{ fill: color }} />
           </IconButton>
         </ThemeProvider>
         <Dialog
@@ -82,7 +93,7 @@ const Posts = ({ title, description, liked, setLike, deletePost }) => {
           </DialogActions>
         </Dialog>
       </div>
-    </div>
+    </Box>
   );
 };
 export default Posts;
