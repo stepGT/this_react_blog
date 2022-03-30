@@ -1,7 +1,13 @@
 .post {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    margin: 8px;
+    border: 1px solid;
+    border-radius: 16px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.icons {
+    text-align: right;
 }
 
 .post button:hover {

@@ -1,76 +1,118 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
+import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
+import Preloader from '../Preloader';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [openPostForm, setOpenPostForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [postTitle, setPostTitle] = useState('');
+  const [postContent, setPostContent] = useState('');
+  const [editID, setEditID] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  const [isFetch, setIsFetch] = useState(true);
 
   const handleAddPost = () => {
-    console.log('handleAddPost');
-    setOpen(true);
+    setOpenPostForm(true);
   };
 
-  const handleSubmit = () => {
-    if (title && content) {
+  const handlePostSubmit = () => {
+    if (postTitle && postContent) {
       const newPost = {
         id: arrPosts.length + 1,
-        title: title,
-        description: content,
+        title: postTitle,
+        description: postContent,
         liked: false,
       };
       setArrPosts((state) => [...state, newPost]);
-      axios.post('https://6237218ab08c39a3af7db13a.mockapi.io/posts', newPost);
-      setOpen(false);
-      setTitle('');
-      setContent('');
+      API.post('/posts', newPost);
+      setOpenPostForm(false);
+      setPostTitle('');
+      setPostContent('');
     } else {
-      setOpen(true);
+      openPostForm(true);
     }
   };
 
-  const handleClose = () => {
-    console.log('handleClose');
-    setOpen(false);
+  const handleEditSubmit = () => {
+    const newPost = {
+      id: editID,
+      title: editTitle,
+      description: editContent,
+    };
+    API.put(`/posts/${editID}`, newPost);
+    setOpenEditForm(false);
+    //
+    setArrPosts((state) => {
+      return state.map((el) =>
+        editID === el.id ? { ...el, title: editTitle, description: editContent } : el
+      );
+    });
   };
 
-  const setLike = post => {
-    axios.put(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${post.id}`, {
-      liked: !post.liked,
+  const handlePostClose = () => {
+    setOpenPostForm(false);
+  };
+
+  const handleEditClose = () => {
+    setOpenEditForm(false);
+  }
+
+  const setLike = (obj) => {
+    API.put(`/posts/${obj.id}`, {
+      ...obj,
+      liked: !obj.liked,
     });
     setArrPosts((state) => {
-      return state.map((post) =>
-        post.id === post.id ? { ...post, liked: !post.liked } : post
+      return state.map((el) =>
+        obj.id === el.id ? { ...el, liked: !el.liked } : el
       );
     });
   };
 
   const deletePost = (postID) => {
-    axios.delete(`https://6237218ab08c39a3af7db13a.mockapi.io/posts/${postID}`);
+    API.delete(`/posts/${postID}`);
     setArrPosts((state) => {
-      return state.filter(post => {
-        return postID !== post.id
+      return state.filter((post) => {
+        return postID !== post.id;
       });
     });
   };
 
+  const editPost = (post) => {
+    setOpenEditForm(true);
+    setEditID(post.id);
+    setEditTitle(post.title);
+    setEditContent(post.description);
+  };
+
   const onChangeTitle = (e) => {
-    setTitle(e.target.value);
+    setPostTitle(e.target.value);
   }
+
+  const onChangeEditTitle = (e) => {
+    setEditTitle(e.target.value);
+  };
 
   const onChangeContent = (e) => {
-    setContent(e.target.value);
+    setPostContent(e.target.value);
   }
 
+  const onChangeEditContent = (e) => {
+    setEditContent(e.target.value);
+  };
+
   useEffect(() => {
-    axios
-      .get('https://6237218ab08c39a3af7db13a.mockapi.io/posts')
-      .then(res => setArrPosts(res.data))
-      .catch((err) => {});
+    (async function () {
+      const response = await API.get('/posts');
+      setArrPosts(response.data);
+      setIsFetch(false);
+    })();
   }, []);
 
   return (
@@ -79,16 +121,27 @@ const Content = () => {
         Add post
       </Button>
       <PostForm
-        handleSubmit={handleSubmit}
-        handleClose={handleClose}
-        open={open}
-        title={title}
+        handleSubmit={handlePostSubmit}
+        handleClose={handlePostClose}
+        open={openPostForm}
+        title={postTitle}
         onChangeTitle={onChangeTitle}
-        content={content}
+        content={postContent}
         onChangeContent={onChangeContent}
+      />
+      <EditPostForm
+        id={editID}
+        handleSubmit={handleEditSubmit}
+        handleClose={handleEditClose}
+        open={openEditForm}
+        title={editTitle}
+        onChangeTitle={onChangeEditTitle}
+        content={editContent}
+        onChangeContent={onChangeEditContent}
       />
       <h1>Simple Blog</h1>
       <div className="posts">
+        {isFetch && <Preloader />}
         {arrPosts &&
           arrPosts.map((post, ind) => (
             <Posts
@@ -98,6 +151,7 @@ const Content = () => {
               liked={post.liked}
               setLike={() => setLike(post)}
               deletePost={() => deletePost(post.id)}
+              editPost={() => editPost(post)}
             />
           ))}
       </div>
