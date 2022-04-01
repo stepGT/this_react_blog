@@ -143,7 +143,7 @@ const Content = () => {
       <div className="posts">
         {isFetch && <Preloader />}
         {arrPosts &&
-          arrPosts.map((post, ind) => (
+          [...arrPosts].reverse().map((post, ind) => (
             <Posts
               key={ind}
               title={post.title}
