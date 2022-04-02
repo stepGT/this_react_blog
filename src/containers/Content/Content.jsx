@@ -4,7 +4,7 @@ import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
-import Preloader from '../Preloader';
+import Preloader from '../../components/Preloader';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);

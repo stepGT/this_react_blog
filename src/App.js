@@ -1,6 +1,7 @@
+import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/Header';
-import Content from './components/Content';
+import Content from './containers/Content';
 import Footer from './components/Footer/Footer';
 
 const App = () => {
@@ -9,7 +10,9 @@ const App = () => {
     <div className="App">
       <Header />
       <main>
-        <Content />
+        <Routes>
+          <Route path='/' element={<Content />} />
+        </Routes>
       </main>
       <Footer year={ year } />
     </div>
