@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import API from '../../utils/API';
+import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
-import Preloader from '../../components/Preloader';
+import Preloader from '@components/Preloader';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);
