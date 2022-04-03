@@ -5,9 +5,11 @@ import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
 import Preloader from '@components/Preloader';
+import Box from '@mui/material/Box';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);
+  const [count, setCount] = useState(0);
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [postTitle, setPostTitle] = useState('');
@@ -34,6 +36,7 @@ const Content = () => {
       setOpenPostForm(false);
       setPostTitle('');
       setPostContent('');
+      setCount(count + 1);
     } else {
       openPostForm(true);
     }
@@ -82,6 +85,7 @@ const Content = () => {
         return postID !== post.id;
       });
     });
+    setCount(count -1);
   };
 
   const editPost = (post) => {
@@ -110,7 +114,8 @@ const Content = () => {
   useEffect(() => {
     (async function () {
       const response = await API.get('/posts');
-      setArrPosts(response.data);
+      setCount(response.data.count);
+      setArrPosts(response.data.items);
       setIsFetch(false);
     })();
   }, []);
@@ -154,6 +159,9 @@ const Content = () => {
               editPost={() => editPost(post)}
             />
           ))}
+        <Box sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+          Post count: {count}
+        </Box>
       </div>
     </>
   );
