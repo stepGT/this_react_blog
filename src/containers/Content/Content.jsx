@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
-import API from '../../utils/API';
+import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
-import Preloader from '../Preloader';
+import Preloader from '@components/Preloader';
+import Box from '@mui/material/Box';
 
 const Content = () => {
   const [arrPosts, setArrPosts] = useState([]);
+  const [count, setCount] = useState(0);
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [postTitle, setPostTitle] = useState('');
@@ -29,11 +31,12 @@ const Content = () => {
         description: postContent,
         liked: false,
       };
-      setArrPosts((state) => [...state, newPost]);
+      setArrPosts(state => [...state, newPost]);
       API.post('/posts', newPost);
       setOpenPostForm(false);
       setPostTitle('');
       setPostContent('');
+      setCount(count + 1);
     } else {
       openPostForm(true);
     }
@@ -48,9 +51,11 @@ const Content = () => {
     API.put(`/posts/${editID}`, newPost);
     setOpenEditForm(false);
     //
-    setArrPosts((state) => {
-      return state.map((el) =>
-        editID === el.id ? { ...el, title: editTitle, description: editContent } : el
+    setArrPosts(state => {
+      return state.map(el =>
+        editID === el.id
+          ? { ...el, title: editTitle, description: editContent }
+          : el
       );
     });
   };
@@ -61,63 +66,69 @@ const Content = () => {
 
   const handleEditClose = () => {
     setOpenEditForm(false);
-  }
+  };
 
-  const setLike = (obj) => {
+  const setLike = obj => {
     API.put(`/posts/${obj.id}`, {
       ...obj,
       liked: !obj.liked,
     });
-    setArrPosts((state) => {
-      return state.map((el) =>
+    setArrPosts(state => {
+      return state.map(el =>
         obj.id === el.id ? { ...el, liked: !el.liked } : el
       );
     });
   };
 
-  const deletePost = (postID) => {
+  const deletePost = postID => {
     API.delete(`/posts/${postID}`);
-    setArrPosts((state) => {
-      return state.filter((post) => {
+    setArrPosts(state => {
+      return state.filter(post => {
         return postID !== post.id;
       });
     });
+    setCount(count - 1);
   };
 
-  const editPost = (post) => {
+  const editPost = post => {
     setOpenEditForm(true);
     setEditID(post.id);
     setEditTitle(post.title);
     setEditContent(post.description);
   };
 
-  const onChangeTitle = (e) => {
+  const onChangeTitle = e => {
     setPostTitle(e.target.value);
-  }
+  };
 
-  const onChangeEditTitle = (e) => {
+  const onChangeEditTitle = e => {
     setEditTitle(e.target.value);
   };
 
-  const onChangeContent = (e) => {
+  const onChangeContent = e => {
     setPostContent(e.target.value);
-  }
+  };
 
-  const onChangeEditContent = (e) => {
+  const onChangeEditContent = e => {
     setEditContent(e.target.value);
   };
 
   useEffect(() => {
     (async function () {
       const response = await API.get('/posts');
-      setArrPosts(response.data);
+      setCount(response.data.count);
+      setArrPosts(response.data.items);
       setIsFetch(false);
     })();
+    return () => {
+      const controller = new AbortController();
+      controller.abort();
+    };
   }, []);
 
   return (
     <>
-      <Button onClick={handleAddPost} size="large" variant="contained">
+      <Button onClick={handleAddPost} size='large' variant='contained'>
         Add post
       </Button>
       <PostForm
@@ -140,20 +151,25 @@ const Content = () => {
         onChangeContent={onChangeEditContent}
       />
       <h1>Simple Blog</h1>
-      <div className="posts">
+      <div className='posts'>
         {isFetch && <Preloader />}
         {arrPosts &&
-          [...arrPosts].reverse().map((post, ind) => (
-            <Posts
-              key={ind}
-              title={post.title}
-              description={post.description}
-              liked={post.liked}
-              setLike={() => setLike(post)}
-              deletePost={() => deletePost(post.id)}
-              editPost={() => editPost(post)}
-            />
-          ))}
+          [...arrPosts]
+            .reverse()
+            .map((post, ind) => (
+              <Posts
+                key={ind}
+                title={post.title}
+                description={post.description}
+                liked={post.liked}
+                setLike={() => setLike(post)}
+                deletePost={() => deletePost(post.id)}
+                editPost={() => editPost(post)}
+              />
+            ))}
+        <Box sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+          Post count: {count}
+        </Box>
       </div>
     </>
   );
