@@ -118,6 +118,10 @@ const Content = () => {
       setArrPosts(response.data.items);
       setIsFetch(false);
     })();
+    return () => {
+      const controller = new AbortController();
+      controller.abort();
+    };
   }, []);
 
   return (
