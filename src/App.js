@@ -3,6 +3,7 @@ import '@/App.css';
 import Header from './components/Header/Header';
 import Content from '@containers/Content';
 import Footer from './components/Footer/Footer';
+import Login from '@containers/Login';
 
 const App = () => {
   const year = new Date().getFullYear();
@@ -11,7 +12,8 @@ const App = () => {
       <Header />
       <main>
         <Routes>
-          <Route path='/' element={<Content />} />
+          <Route exact path='/' element={<Content />} />
+          <Route path='/login' element={<Login />} />
         </Routes>
       </main>
       <Footer year={ year } />
