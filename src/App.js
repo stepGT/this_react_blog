@@ -9,7 +9,7 @@ import About from '@containers/About';
 const App = () => {
   const year = new Date().getFullYear();
   return (
-    <div className="App">
+    <div className='App'>
       <Header />
       <main>
         <Routes>
@@ -18,7 +18,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
         </Routes>
       </main>
-      <Footer year={ year } />
+      <Footer year={year} />
     </div>
   );
 };

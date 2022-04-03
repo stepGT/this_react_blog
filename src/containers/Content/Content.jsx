@@ -31,7 +31,7 @@ const Content = () => {
         description: postContent,
         liked: false,
       };
-      setArrPosts((state) => [...state, newPost]);
+      setArrPosts(state => [...state, newPost]);
       API.post('/posts', newPost);
       setOpenPostForm(false);
       setPostTitle('');
@@ -51,9 +51,11 @@ const Content = () => {
     API.put(`/posts/${editID}`, newPost);
     setOpenEditForm(false);
     //
-    setArrPosts((state) => {
-      return state.map((el) =>
-        editID === el.id ? { ...el, title: editTitle, description: editContent } : el
+    setArrPosts(state => {
+      return state.map(el =>
+        editID === el.id
+          ? { ...el, title: editTitle, description: editContent }
+          : el
       );
     });
   };
@@ -64,50 +66,50 @@ const Content = () => {
 
   const handleEditClose = () => {
     setOpenEditForm(false);
-  }
+  };
 
-  const setLike = (obj) => {
+  const setLike = obj => {
     API.put(`/posts/${obj.id}`, {
       ...obj,
       liked: !obj.liked,
     });
-    setArrPosts((state) => {
-      return state.map((el) =>
+    setArrPosts(state => {
+      return state.map(el =>
         obj.id === el.id ? { ...el, liked: !el.liked } : el
       );
     });
   };
 
-  const deletePost = (postID) => {
+  const deletePost = postID => {
     API.delete(`/posts/${postID}`);
-    setArrPosts((state) => {
-      return state.filter((post) => {
+    setArrPosts(state => {
+      return state.filter(post => {
         return postID !== post.id;
       });
     });
-    setCount(count -1);
+    setCount(count - 1);
   };
 
-  const editPost = (post) => {
+  const editPost = post => {
     setOpenEditForm(true);
     setEditID(post.id);
     setEditTitle(post.title);
     setEditContent(post.description);
   };
 
-  const onChangeTitle = (e) => {
+  const onChangeTitle = e => {
     setPostTitle(e.target.value);
-  }
+  };
 
-  const onChangeEditTitle = (e) => {
+  const onChangeEditTitle = e => {
     setEditTitle(e.target.value);
   };
 
-  const onChangeContent = (e) => {
+  const onChangeContent = e => {
     setPostContent(e.target.value);
-  }
+  };
 
-  const onChangeEditContent = (e) => {
+  const onChangeEditContent = e => {
     setEditContent(e.target.value);
   };
 
@@ -126,7 +128,7 @@ const Content = () => {
 
   return (
     <>
-      <Button onClick={handleAddPost} size="large" variant="contained">
+      <Button onClick={handleAddPost} size='large' variant='contained'>
         Add post
       </Button>
       <PostForm
@@ -149,20 +151,22 @@ const Content = () => {
         onChangeContent={onChangeEditContent}
       />
       <h1>Simple Blog</h1>
-      <div className="posts">
+      <div className='posts'>
         {isFetch && <Preloader />}
         {arrPosts &&
-          [...arrPosts].reverse().map((post, ind) => (
-            <Posts
-              key={ind}
-              title={post.title}
-              description={post.description}
-              liked={post.liked}
-              setLike={() => setLike(post)}
-              deletePost={() => deletePost(post.id)}
-              editPost={() => editPost(post)}
-            />
-          ))}
+          [...arrPosts]
+            .reverse()
+            .map((post, ind) => (
+              <Posts
+                key={ind}
+                title={post.title}
+                description={post.description}
+                liked={post.liked}
+                setLike={() => setLike(post)}
+                deletePost={() => deletePost(post.id)}
+                editPost={() => editPost(post)}
+              />
+            ))}
         <Box sx={{ textAlign: 'center', fontWeight: 'bold' }}>
           Post count: {count}
         </Box>
