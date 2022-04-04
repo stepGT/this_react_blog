@@ -38,7 +38,7 @@ const Content = () => {
       setPostContent('');
       setCount(count + 1);
     } else {
-      openPostForm(true);
+      setOpenPostForm(true);
     }
   };
 
