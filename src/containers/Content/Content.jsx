@@ -124,10 +124,6 @@ const Content = () => {
       }
       return () => { isMounted = false }; // cleanup toggles value, if unmounted
     })();
-    return () => {
-      const controller = new AbortController();
-      controller.abort();
-    };
   }, []);
 
   return (
