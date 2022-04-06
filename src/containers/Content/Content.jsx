@@ -115,10 +115,14 @@ const Content = () => {
 
   useEffect(() => {
     (async function () {
+      let isMounted = true; 
       const response = await API.get('/posts');
-      setCount(response.data.count);
-      setArrPosts(response.data.items);
-      setIsFetch(false);
+      if (isMounted) {
+        setCount(response.data.count);
+        setArrPosts(response.data.items);
+        setIsFetch(false);
+      }
+      return () => { isMounted = false }; // cleanup toggles value, if unmounted
     })();
     return () => {
       const controller = new AbortController();
