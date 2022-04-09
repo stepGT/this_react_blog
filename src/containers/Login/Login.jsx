@@ -1,18 +1,19 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import styles from './Login.module.css';
 import { Typography } from '@mui/material';
 
-const Login = () => {
+const Login = ({ setUname, setIsLogin }) => {
   let navigate = useNavigate();
   let location = useLocation();
-  let params = useParams();
   const onClickHandler = e => {
     e.preventDefault();
-    console.log(e.nativeEvent.target[0].value);
-    console.log(e.nativeEvent.target[2].value);
+    localStorage.setItem('isLogin', true);
+    localStorage.setItem('uname', e.nativeEvent.target[0].value);
+    setIsLogin(true);
+    setUname(e.nativeEvent.target[0].value);
     navigate('/' + location.search);
   };
   return (
