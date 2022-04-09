@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '@utils/API';
+import { controller } from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
@@ -122,7 +123,10 @@ const Content = () => {
         setArrPosts(response.data.items);
         setIsFetch(false);
       }
-      return () => { isMounted = false }; // cleanup toggles value, if unmounted
+      return () => {
+        isMounted = false; // cleanup toggles value, if unmounted
+        controller.abort(); // cancel the request
+      };
     })();
   }, []);
 
