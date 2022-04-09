@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '@utils/API';
+import { controller } from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
@@ -115,15 +116,18 @@ const Content = () => {
 
   useEffect(() => {
     (async function () {
+      let isMounted = true; 
       const response = await API.get('/posts');
-      setCount(response.data.count);
-      setArrPosts(response.data.items);
-      setIsFetch(false);
+      if (isMounted) {
+        setCount(response.data.count);
+        setArrPosts(response.data.items);
+        setIsFetch(false);
+      }
+      return () => {
+        isMounted = false; // cleanup toggles value, if unmounted
+        controller.abort(); // cancel the request
+      };
     })();
-    return () => {
-      const controller = new AbortController();
-      controller.abort();
-    };
   }, []);
 
   return (
