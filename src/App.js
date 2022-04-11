@@ -5,7 +5,7 @@ import Header from './components/Header/Header';
 import Content from '@containers/Content';
 import Footer from './components/Footer/Footer';
 import Login from '@containers/Login';
-import About from '@containers/About';
+import Main from '@containers/Main';
 import NotFound from './components/NotFound';
 
 const App = () => {
@@ -17,8 +17,8 @@ const App = () => {
       <Header uname={uname} setUname={setUname} isLogin={isLogin} setIsLogin={setIsLogin} />
       <main>
         <Routes>
-          <Route exact path='/' element={<Content />} />
-          <Route path='/about' element={<About />} />
+          <Route path='/' element={<Main />} />
+          <Route exact path='/content' element={<Content />} />
           <Route
             path='/login'
             element={

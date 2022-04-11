@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme();
 
-export default function About() {
+export default function Main() {
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -26,7 +26,7 @@ export default function About() {
             color='text.primary'
             gutterBottom
           >
-            About layout
+            Main layout
           </Typography>
           <Typography
             variant='h5'
