@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '@utils/API';
-import { controller } from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
 import Posts from './components/Posts/Posts';
@@ -9,9 +8,9 @@ import Button from '@mui/material/Button';
 import Preloader from '@components/Preloader';
 import Box from '@mui/material/Box';
 
-const Content = ({ isLogin }) => {
-  const [arrPosts, setArrPosts] = useState([]);
-  const [count, setCount] = useState(0);
+const Content = ({ isLogin, data, loaded }) => {
+  const [arrPosts, setArrPosts] = useState(data?.items);
+  const [count, setCount] = useState(data?.count);
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [postTitle, setPostTitle] = useState('');
@@ -19,7 +18,7 @@ const Content = ({ isLogin }) => {
   const [editID, setEditID] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
-  const [isFetch, setIsFetch] = useState(true);
+  const [isFetch, setIsFetch] = useState(loaded);
   const navigate = useNavigate();
 
   const handleAddPost = () => {
@@ -118,20 +117,10 @@ const Content = ({ isLogin }) => {
 
   useEffect(() => {
     !isLogin && navigate('/login');
-    (async function () {
-      let isMounted = true; 
-      const response = await API.get('/posts');
-      if (isMounted) {
-        setCount(response.data.count);
-        setArrPosts(response.data.items);
-        setIsFetch(false);
-      }
-      return () => {
-        isMounted = false; // cleanup toggles value, if unmounted
-        controller.abort(); // cancel the request
-      };
-    })();
-  }, [isLogin]);
+    setArrPosts(data?.items);
+    setCount(data?.count);
+    setIsFetch(!loaded);
+  }, [data, loaded]);
 
   return (
     <>
@@ -174,9 +163,11 @@ const Content = ({ isLogin }) => {
                 editPost={() => editPost(post)}
               />
             ))}
-        <Box sx={{ textAlign: 'center', fontWeight: 'bold' }}>
-          Post count: {count}
-        </Box>
+        {arrPosts && (
+          <Box sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+            Post count: {count}
+          </Box>
+        )}
       </div>
     </>
   );

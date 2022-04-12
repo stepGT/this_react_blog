@@ -9,6 +9,7 @@ module.exports = {
       '@components': resolvePath('./src/components'),
       '@containers': resolvePath('./src/containers'),
       '@utils': resolvePath('./src/utils'),
+      '@hooks': resolvePath('./src/hooks'),
     },
   },
 };
