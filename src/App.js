@@ -18,7 +18,7 @@ const App = () => {
       <main>
         <Routes>
           <Route path='/' element={<Main />} />
-          <Route exact path='/content' element={<Content />} />
+          <Route exact path='/content' element={<Content isLogin={isLogin} />} />
           <Route
             path='/login'
             element={

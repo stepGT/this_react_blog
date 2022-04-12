@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '@utils/API';
 import { controller } from '../../utils/API';
 import PostForm from './components/PostForm/PostForm';
@@ -8,7 +9,7 @@ import Button from '@mui/material/Button';
 import Preloader from '@components/Preloader';
 import Box from '@mui/material/Box';
 
-const Content = () => {
+const Content = ({ isLogin }) => {
   const [arrPosts, setArrPosts] = useState([]);
   const [count, setCount] = useState(0);
   const [openPostForm, setOpenPostForm] = useState(false);
@@ -19,6 +20,7 @@ const Content = () => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
   const [isFetch, setIsFetch] = useState(true);
+  const navigate = useNavigate();
 
   const handleAddPost = () => {
     setOpenPostForm(true);
@@ -115,6 +117,7 @@ const Content = () => {
   };
 
   useEffect(() => {
+    !isLogin && navigate('/login');
     (async function () {
       let isMounted = true; 
       const response = await API.get('/posts');
@@ -128,7 +131,7 @@ const Content = () => {
         controller.abort(); // cancel the request
       };
     })();
-  }, []);
+  }, [isLogin]);
 
   return (
     <>

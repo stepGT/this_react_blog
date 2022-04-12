@@ -25,6 +25,16 @@ const Header = ({ uname, setUname, isLogin, setIsLogin }) => {
           >
             Home
           </NavLink>
+          <NavLink
+            style={({ isActive }) => {
+              return {
+                color: isActive ? '#d15700' : '',
+              };
+            }}
+            to='/content'
+          >
+            Content
+          </NavLink>
           <NavLink onClick={handleClick} to='/login'>
             <Tooltip title={'Welcome ' + uname}>
               <LogoutIcon />
