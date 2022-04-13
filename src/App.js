@@ -41,7 +41,7 @@ const App = () => {
             }
           />
           <Route path='404' element={<NotFound />} />
-          <Route path='*' element={<Navigate state={{ from: location }} to='404' />} />
+          <Route path='*' element={<Navigate replace state={{ from: location }} to='404' />} />
         </Routes>
       </main>
       <Footer year={year} />
