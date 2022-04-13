@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Preloader from '@components/Preloader';
 import Box from '@mui/material/Box';
 
-const Content = ({ isLogin, data, loaded }) => {
+const Content = ({ data, loaded }) => {
   const [arrPosts, setArrPosts] = useState(data?.items);
   const [count, setCount] = useState(data?.count);
   const [openPostForm, setOpenPostForm] = useState(false);
@@ -116,7 +116,6 @@ const Content = ({ isLogin, data, loaded }) => {
   };
 
   useEffect(() => {
-    !isLogin && navigate('/login');
     setArrPosts(data?.items);
     setCount(data?.count);
     setIsFetch(!loaded);

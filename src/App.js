@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { PublicRoute } from '@routes/PublicRoute';
+import { PrivateRoute } from '@routes/PrivateRoute';
 import useAxios from '@hooks/useAxios';
 import '@/App.css';
 import Header from './components/Header/Header';
@@ -21,18 +23,20 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Main />} />
           <Route
-            exact
-            path='/content'
-            element={<Content isLogin={isLogin} data={data} loaded={loaded} />}
-          />
-          <Route
             path='/login'
             element={
-              <Login
-                setUname={setUname}
-                isLogin={isLogin}
-                setIsLogin={setIsLogin}
-              />
+              <PublicRoute pathRedirect='/' isLogin={isLogin}>
+                <Login setUname={setUname} setIsLogin={setIsLogin} />
+              </PublicRoute>
+            }
+          />
+          <Route
+            exact
+            path='/content'
+            element={
+              <PrivateRoute pathRedirect='/login' isLogin={isLogin}>
+                <Content data={data} loaded={loaded} />
+              </PrivateRoute>
             }
           />
           <Route path='*' element={<NotFound />} />
