@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { PublicRoute } from '@routes/PublicRoute';
 import { PrivateRoute } from '@routes/PrivateRoute';
 import useAxios from '@hooks/useAxios';
@@ -39,7 +39,8 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          <Route path='*' element={<NotFound />} />
+          <Route path='404' element={<NotFound />} />
+          <Route path='*' element={<Navigate to='404' />} />
         </Routes>
       </main>
       <Footer year={year} />
