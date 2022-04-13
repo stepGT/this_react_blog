@@ -28,7 +28,7 @@ const useAxios = (url, method, payload) => {
         setLoaded(true);
       }
     })();
-  }, []);
+  }, [url, method, payload]);
 
   return { cancel, data, error, loaded };
 };
