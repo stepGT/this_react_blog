@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
@@ -19,7 +18,6 @@ const Content = ({ data, loaded }) => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
   const [isFetch, setIsFetch] = useState(loaded);
-  const navigate = useNavigate();
 
   const handleAddPost = () => {
     setOpenPostForm(true);

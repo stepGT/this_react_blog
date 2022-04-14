@@ -16,7 +16,7 @@ const App = () => {
   const { data, loaded } = useAxios('/posts');
   const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin'));
   const [uname, setUname] = useState(localStorage.getItem('uname'));
-  const year = new Date().getFullYear();
+
   return (
     <div className='App'>
       <Header uname={uname} setUname={setUname} isLogin={isLogin} setIsLogin={setIsLogin} />
@@ -44,7 +44,7 @@ const App = () => {
           <Route path='*' element={<Navigate replace state={{ from: location }} to='404' />} />
         </Routes>
       </main>
-      <Footer year={year} />
+      <Footer />
     </div>
   );
 };
