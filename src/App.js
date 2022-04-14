@@ -6,6 +6,7 @@ import useAxios from '@hooks/useAxios';
 import '@/App.css';
 import Header from './components/Header/Header';
 import Content from '@containers/Content';
+import ContentItem from '@containers/ContentItem';
 import Footer from './components/Footer/Footer';
 import Login from '@containers/Login';
 import Main from '@containers/Main';
@@ -29,6 +30,14 @@ const App = () => {
               <PublicRoute pathRedirect='/' isLogin={isLogin}>
                 <Login setUname={setUname} setIsLogin={setIsLogin} />
               </PublicRoute>
+            }
+          />
+          <Route
+            path='/content/:postID'
+            element={
+              <PrivateRoute pathRedirect='/login' isLogin={isLogin}>
+                <ContentItem postID={location.state?.from} />
+              </PrivateRoute>
             }
           />
           <Route

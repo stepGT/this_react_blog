@@ -152,6 +152,7 @@ const Content = ({ data, loaded }) => {
             .map((post, ind) => (
               <Posts
                 key={ind}
+                postID={post.id}
                 title={post.title}
                 description={post.description}
                 liked={post.liked}

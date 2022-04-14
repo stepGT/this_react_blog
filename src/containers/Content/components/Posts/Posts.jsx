@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from "react-router-dom";
 import styles from './Posts.module.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Button from '@mui/material/Button';
@@ -21,7 +22,7 @@ const theme = createTheme({
   },
 });
 
-const Posts = ({ title, description, liked, setLike, deletePost, editPost }) => {
+const Posts = ({ postID, title, description, liked, setLike, deletePost, editPost }) => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,7 +44,7 @@ const Posts = ({ title, description, liked, setLike, deletePost, editPost }) => 
   return (
     <Box className={styles.post}>
       <div className={styles.postContent}>
-        <h2>{title}</h2>
+        <h2><Link state={{ from: postID }} title={title} to={postID}>{title}</Link></h2>
         <p>{description}</p>
       </div>
       <div className={styles.icons}>
