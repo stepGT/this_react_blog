@@ -36,7 +36,7 @@ const App = () => {
             path='/content/:postID'
             element={
               <PrivateRoute pathRedirect='/login' isLogin={isLogin}>
-                <ContentItem postID={location.state?.from} />
+                <ContentItem />
               </PrivateRoute>
             }
           />

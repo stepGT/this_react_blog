@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import useAxios from '@hooks/useAxios';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -10,7 +11,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Preloader from '@components/Preloader';
 
-const ContentItem = ({ postID }) => {
+const ContentItem = () => {
+  const { postID } = useParams();
   const { data, loaded } = useAxios(`posts/${postID}`);
   return (
     <>
