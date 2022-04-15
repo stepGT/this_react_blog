@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '@hooks/useAxios';
 import Card from '@mui/material/Card';

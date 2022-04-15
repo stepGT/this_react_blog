@@ -14,7 +14,7 @@ import NotFound from './components/NotFound';
 
 const App = () => {
   const location = useLocation();
-  const { data, loaded } = useAxios('/posts');
+  const { data, loaded } = useAxios('posts');
   const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin'));
   const [uname, setUname] = useState(localStorage.getItem('uname'));
 

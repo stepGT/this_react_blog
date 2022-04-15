@@ -32,7 +32,7 @@ const Content = ({ data, loaded }) => {
         liked: false,
       };
       setArrPosts(state => [...state, newPost]);
-      API.post('/posts', newPost);
+      API.post('posts', newPost);
       setOpenPostForm(false);
       setPostTitle('');
       setPostContent('');
@@ -48,7 +48,7 @@ const Content = ({ data, loaded }) => {
       title: editTitle,
       description: editContent,
     };
-    API.put(`/posts/${editID}`, newPost);
+    API.put(`posts/${editID}`, newPost);
     setOpenEditForm(false);
     //
     setArrPosts(state => {
@@ -69,7 +69,7 @@ const Content = ({ data, loaded }) => {
   };
 
   const setLike = obj => {
-    API.put(`/posts/${obj.id}`, {
+    API.put(`posts/${obj.id}`, {
       ...obj,
       liked: !obj.liked,
     });
@@ -81,7 +81,7 @@ const Content = ({ data, loaded }) => {
   };
 
   const deletePost = postID => {
-    API.delete(`/posts/${postID}`);
+    API.delete(`posts/${postID}`);
     setArrPosts(state => {
       return state.filter(post => {
         return postID !== post.id;

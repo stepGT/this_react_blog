@@ -5,6 +5,6 @@ export const PrivateRoute = ({ pathRedirect, isLogin, children }) => {
   let navigate = useNavigate();
   useEffect(() => {
     if (!isLogin) navigate(pathRedirect);
-  }, []);
+  }, [pathRedirect, isLogin, navigate]);
   return isLogin ? children : <></>;
 };
