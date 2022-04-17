@@ -6,6 +6,7 @@ import Posts from './components/Posts/Posts';
 import Button from '@mui/material/Button';
 import Preloader from '@components/Preloader';
 import Box from '@mui/material/Box';
+import styles from './Content.module.css';
 
 const Content = ({ data, loaded }) => {
   const [arrPosts, setArrPosts] = useState(data?.items);
@@ -144,7 +145,7 @@ const Content = ({ data, loaded }) => {
         onChangeContent={onChangeEditContent}
       />
       <h1>Simple Blog</h1>
-      <div className='posts'>
+      <div className={styles.posts}>
         {isFetch && <Preloader />}
         {arrPosts &&
           [...arrPosts]
