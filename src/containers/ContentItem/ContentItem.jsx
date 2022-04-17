@@ -1,6 +1,17 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '@hooks/useAxios';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import Card from '@mui/material/Card';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -10,9 +21,35 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Preloader from '@components/Preloader';
 
-const ContentItem = () => {
+const theme = createTheme({
+  palette: {
+    neutral: {
+      main: '#000',
+    },
+  },
+});
+
+const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
+  const [open, setOpen] = useState(false);
   const { postID } = useParams();
   const { data, loaded } = useAxios(`posts/${postID}`);
+  const color = liked ? 'crimson' : 'black';
+  const handleClickOpen = () => {
+    console.log('handleClickOpen');
+  };
+  const handleClose = e => {
+    switch (e.target.innerText) {
+      case 'CANCEL':
+        setOpen(false);
+        break;
+      case 'OK':
+        deletePost();
+        setOpen(false);
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <>
       {!loaded && <Preloader />}
@@ -40,7 +77,51 @@ const ContentItem = () => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size='small'>Share</Button>
+              <ThemeProvider theme={theme}>
+                <IconButton
+                  onClick={editPost}
+                  aria-label='edit'
+                  size='large'
+                  color='neutral'
+                >
+                  <EditIcon fontSize='inherit' />
+                </IconButton>
+                <IconButton
+                  onClick={handleClickOpen}
+                  aria-label='delete'
+                  size='large'
+                  color='neutral'
+                >
+                  <DeleteIcon fontSize='inherit' />
+                </IconButton>
+                <IconButton
+                  onClick={setLike}
+                  aria-label='favorite'
+                  size='large'
+                  color='neutral'
+                >
+                  <FavoriteIcon style={{ fill: color }} />
+                </IconButton>
+              </ThemeProvider>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>{`Delete post ${data?.title}?`}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id='alert-dialog-description'>
+                    You real want delete this post? Hmm
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleClose} autoFocus>
+                    Ok
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </CardActions>
           </Card>
         </Container>
