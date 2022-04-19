@@ -4,6 +4,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { PublicRoute } from '@routes/PublicRoute';
 import { PrivateRoute } from '@routes/PrivateRoute';
 import useAxios from '@hooks/useAxios';
+import { addPosts } from '@actions/postsAction';
 import '@/App.css';
 import Header from './components/Header/Header';
 import Content from '@containers/Content';
@@ -21,7 +22,7 @@ const App = () => {
   const [uname, setUname] = useState(localStorage.getItem('uname'));
 
   useEffect(() => {
-    dispatch({ type: 'ADD_POSTS', payload: data });
+    dispatch(addPosts(data));
   }, [dispatch, data]);
 
   return (

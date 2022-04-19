@@ -12,6 +12,7 @@ module.exports = {
       '@hooks': resolvePath('./src/hooks'),
       '@routes': resolvePath('./src/routes'),
       '@reducers': resolvePath('./src/reducers'),
+      '@actions': resolvePath('./src/actions'),
       '@store': resolvePath('./src/store'),
     },
   },
