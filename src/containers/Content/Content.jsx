@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLike, deletePost, editPost } from '@actions/postsAction';
+import { setLike, deletePost, editPost, addPost } from '@actions/postsAction';
 import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
@@ -32,8 +32,8 @@ const Content = ({ loaded }) => {
         description: postContent,
         liked: false,
       };
-      //setArrPosts(state => [...state, newPost]);
       API.post('posts', newPost);
+      dispatch(addPost(newPost));
       setOpenPostForm(false);
       setPostTitle('');
       setPostContent('');

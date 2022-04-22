@@ -11,6 +11,15 @@ export default function postsReducer(state = initialState, action) {
         ...state,
         posts: action.payload,
       };
+    case 'ADD_POST':
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          items: [...state.posts.items, action.payload],
+          count: ++state.posts.items.length,
+        },
+      };
     case 'DELETE_POST':
       const newDelPosts = state.posts.items.filter(
         post => action.payload !== post.id
