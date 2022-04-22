@@ -11,6 +11,18 @@ export default function postsReducer(state = initialState, action) {
         ...state,
         posts: action.payload,
       };
+    case 'DELETE_POST':
+      const newDelPosts = state.posts.items.filter(
+        post => action.payload !== post.id
+      );
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          items: newDelPosts,
+          count: newDelPosts.length
+        },
+      };
     case 'SET_LIKE':
       const newPosts = state.posts.items.map(el =>
         el.id === action.payload ? { ...el, liked: !el.liked } : el

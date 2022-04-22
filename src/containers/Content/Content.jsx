@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLike } from '@actions/postsAction';
+import { setLike, deletePost } from '@actions/postsAction';
 import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
@@ -76,13 +76,9 @@ const Content = ({ loaded }) => {
     dispatch(setLike(obj.id));
   };
 
-  const deletePost = postID => {
+  const deletePostHandler = postID => {
     API.delete(`posts/${postID}`);
-    // setArrPosts(state => {
-    //   return state.filter(post => {
-    //     return postID !== post.id;
-    //   });
-    // });
+    dispatch(deletePost(postID));
   };
 
   const editPost = post => {
@@ -146,7 +142,7 @@ const Content = ({ loaded }) => {
                 description={post.description}
                 liked={post.liked}
                 setLike={() => setLikeHandler(post)}
-                deletePost={() => deletePost(post.id)}
+                deletePost={() => deletePostHandler(post.id)}
                 editPost={() => editPost(post)}
               />
             ))}
