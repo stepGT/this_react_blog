@@ -1,5 +1,8 @@
 const initialState = {
-  posts: [],
+  posts: {
+    count: 0,
+    items: [],
+  },
 };
 export default function postsReducer(state = initialState, action) {
   switch (action.type) {
@@ -8,8 +11,17 @@ export default function postsReducer(state = initialState, action) {
         ...state,
         posts: action.payload,
       };
-    case 'GET_POSTS':
-      return { ...state };
+    case 'SET_LIKE':
+      const newPosts = state.posts.items.map(el =>
+        el.id === action.payload ? { ...el, liked: !el.liked } : el
+      );
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          items: newPosts,
+        },
+      };
     default:
       return state;
   }

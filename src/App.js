@@ -52,7 +52,7 @@ const App = () => {
             path='/content'
             element={
               <PrivateRoute pathRedirect='/login' isLogin={isLogin}>
-                <Content data={data} loaded={loaded} />
+                <Content loaded={loaded} />
               </PrivateRoute>
             }
           />
