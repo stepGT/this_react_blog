@@ -34,6 +34,23 @@ export default function postsReducer(state = initialState, action) {
           items: newPosts,
         },
       };
+    case 'EDIT_POST':
+      const editPosts = state.posts.items.map(el =>
+        action.payload.id === el.id
+          ? {
+              ...el,
+              title: action.payload.title,
+              description: action.payload.description,
+            }
+          : el
+      );
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          items: editPosts,
+        },
+      };
     default:
       return state;
   }

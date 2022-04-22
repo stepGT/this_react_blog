@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLike, deletePost } from '@actions/postsAction';
+import { setLike, deletePost, editPost } from '@actions/postsAction';
 import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
@@ -50,14 +50,7 @@ const Content = ({ loaded }) => {
     };
     API.put(`posts/${editID}`, newPost);
     setOpenEditForm(false);
-    //
-    // setArrPosts(state => {
-    //   return state.map(el =>
-    //     editID === el.id
-    //       ? { ...el, title: editTitle, description: editContent }
-    //       : el
-    //   );
-    // });
+    dispatch(editPost(newPost));
   };
 
   const handlePostClose = () => {
@@ -81,7 +74,7 @@ const Content = ({ loaded }) => {
     dispatch(deletePost(postID));
   };
 
-  const editPost = post => {
+  const editPostHandler = post => {
     setOpenEditForm(true);
     setEditID(post.id);
     setEditTitle(post.title);
@@ -143,7 +136,7 @@ const Content = ({ loaded }) => {
                 liked={post.liked}
                 setLike={() => setLikeHandler(post)}
                 deletePost={() => deletePostHandler(post.id)}
-                editPost={() => editPost(post)}
+                editPost={() => editPostHandler(post)}
               />
             ))}
         {items && (
