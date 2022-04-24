@@ -67,7 +67,7 @@ const ContentItem = ({ deletePost, editPost, setLike }) => {
             <CardMedia
               height='640'
               component='img'
-              image={data?.image}
+              image={post.image}
               alt=''
             />
             <CardContent>
