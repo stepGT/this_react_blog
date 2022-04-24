@@ -14,6 +14,7 @@ module.exports = {
       '@reducers': resolvePath('./src/reducers'),
       '@actions': resolvePath('./src/actions'),
       '@store': resolvePath('./src/store'),
+      '@redux': resolvePath('./src/redux'),
     },
   },
 };

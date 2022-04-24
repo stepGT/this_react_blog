@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import useAxios from '@hooks/useAxios';
+import { selectPostByID } from '@redux/selectors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Card from '@mui/material/Card';
@@ -29,11 +30,12 @@ const theme = createTheme({
   },
 });
 
-const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
+const ContentItem = ({ deletePost, editPost, setLike }) => {
   const [open, setOpen] = useState(false);
   const { postID } = useParams();
-  const { data, loaded } = useAxios(`posts/${postID}`);
-  const color = liked ? 'crimson' : 'black';
+  const obj = useSelector(state => selectPostByID(state, postID)) || [];
+  const post = obj[0] || {};
+  const color = post.liked ? 'crimson' : 'black';
   const handleClickOpen = () => {
     console.log('handleClickOpen');
   };
@@ -52,7 +54,7 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
   };
   return (
     <>
-      {!loaded && <Preloader />}
+      {!post && <Preloader />}
       <Box
         sx={{
           bgcolor: 'background.paper',
@@ -70,10 +72,10 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='div'>
-                {data?.title}
+                {post.title}
               </Typography>
               <Typography variant='body2' color='text.secondary'>
-                {data?.description}
+                {post.description}
               </Typography>
             </CardContent>
             <CardActions>
@@ -109,7 +111,7 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
                 aria-labelledby='alert-dialog-title'
                 aria-describedby='alert-dialog-description'
               >
-                <DialogTitle id='alert-dialog-title'>{`Delete post ${data?.title}?`}</DialogTitle>
+                <DialogTitle id='alert-dialog-title'>{`Delete post ${post.title}?`}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id='alert-dialog-description'>
                     You real want delete this post? Hmm
