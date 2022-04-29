@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 import { selectPostByID } from '@redux/selectors';
+import { setLike, deletePost, editPost } from '@actions/postsAction';
+import API from '@utils/API';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Card from '@mui/material/Card';
@@ -30,14 +32,16 @@ const theme = createTheme({
   },
 });
 
-const ContentItem = ({ deletePost, editPost, setLike }) => {
+const ContentItem = ({ editPost }) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
   const { postID } = useParams();
   const obj = useSelector(state => selectPostByID(state, postID)) || [];
   const post = obj[0] || {};
   const color = post.liked ? 'crimson' : 'black';
   const handleClickOpen = () => {
-    console.log('handleClickOpen');
+    setOpen(true);
   };
   const handleClose = e => {
     switch (e.target.innerText) {
@@ -45,12 +49,20 @@ const ContentItem = ({ deletePost, editPost, setLike }) => {
         setOpen(false);
         break;
       case 'OK':
-        deletePost();
+        dispatch(deletePost(post.id));
         setOpen(false);
+        navigate('/');
         break;
       default:
         break;
     }
+  };
+  const setLikeHandler = obj => {
+    API.put(`posts/${obj.id}`, {
+      ...obj,
+      liked: !obj.liked,
+    });
+    dispatch(setLike(obj.id));
   };
   return (
     <>
@@ -97,7 +109,7 @@ const ContentItem = ({ deletePost, editPost, setLike }) => {
                   <DeleteIcon fontSize='inherit' />
                 </IconButton>
                 <IconButton
-                  onClick={setLike}
+                  onClick={() => setLikeHandler(post)}
                   aria-label='favorite'
                   size='large'
                   color='neutral'
