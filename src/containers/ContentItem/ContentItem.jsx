@@ -49,7 +49,9 @@ const ContentItem = ({ editPost }) => {
         setOpen(false);
         break;
       case 'OK':
-        dispatch(deletePost(post.id));
+        const postID = post.id;
+        dispatch(deletePost(postID));
+        API.delete(`posts/${postID}`);
         setOpen(false);
         navigate('/');
         break;
