@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { selectPostByID } from '@redux/selectors';
 import { setLike, deletePost, editPost } from '@actions/postsAction';
 import API from '@utils/API';
+import EditPostForm from '../Content/components/EditPostForm';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Card from '@mui/material/Card';
@@ -32,16 +33,45 @@ const theme = createTheme({
   },
 });
 
-const ContentItem = ({ editPost }) => {
+const ContentItem = () => {
   const [open, setOpen] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [editID, setEditID] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const { postID } = useParams();
   const obj = useSelector(state => selectPostByID(state, postID)) || [];
   const post = obj[0] || {};
   const color = post.liked ? 'crimson' : 'black';
+  const editPostHandler = post => {
+    setOpenEditForm(true);
+    setEditID(post.id);
+    setEditTitle(post.title);
+    setEditContent(post.description);
+  };
+  const handleEditSubmit = () => {
+    const newPost = {
+      id: editID,
+      title: editTitle,
+      description: editContent,
+    };
+    API.put(`posts/${editID}`, newPost);
+    setOpenEditForm(false);
+    dispatch(editPost(newPost));
+  };
   const handleClickOpen = () => {
     setOpen(true);
+  };
+  const handleEditClose = () => {
+    setOpenEditForm(false);
+  };
+  const onChangeEditTitle = e => {
+    setEditTitle(e.target.value);
+  };
+  const onChangeEditContent = e => {
+    setEditContent(e.target.value);
   };
   const handleClose = e => {
     switch (e.target.innerText) {
@@ -77,6 +107,16 @@ const ContentItem = ({ editPost }) => {
         }}
       >
         <Container>
+          <EditPostForm
+            id={editID}
+            handleSubmit={handleEditSubmit}
+            handleClose={handleEditClose}
+            open={openEditForm}
+            title={editTitle}
+            onChangeTitle={onChangeEditTitle}
+            content={editContent}
+            onChangeContent={onChangeEditContent}
+          />
           <Card sx={{ maxWidth: 640, margin: '0 auto' }}>
             <CardMedia
               height='640'
@@ -95,7 +135,7 @@ const ContentItem = ({ editPost }) => {
             <CardActions>
               <ThemeProvider theme={theme}>
                 <IconButton
-                  onClick={editPost}
+                  onClick={() => editPostHandler(post)}
                   aria-label='edit'
                   size='large'
                   color='neutral'
