@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { PublicRoute } from '@routes/PublicRoute';
 import { PrivateRoute } from '@routes/PrivateRoute';
 import useAxios from '@hooks/useAxios';
+import { addPosts } from '@actions/postsAction';
 import '@/App.css';
 import Header from './components/Header/Header';
 import Content from '@containers/Content';
@@ -13,10 +15,15 @@ import Main from '@containers/Main';
 import NotFound from './components/NotFound';
 
 const App = () => {
-  const location = useLocation();
   const { data, loaded } = useAxios('posts');
+  const dispatch = useDispatch();
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin'));
   const [uname, setUname] = useState(localStorage.getItem('uname'));
+
+  useEffect(() => {
+    dispatch(addPosts(data));
+  }, [dispatch, data]);
 
   return (
     <div className='App'>
@@ -45,7 +52,7 @@ const App = () => {
             path='/content'
             element={
               <PrivateRoute pathRedirect='/login' isLogin={isLogin}>
-                <Content data={data} loaded={loaded} />
+                <Content loaded={loaded} />
               </PrivateRoute>
             }
           />

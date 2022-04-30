@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLike, deletePost, editPost, addPost } from '@actions/postsAction';
 import API from '@utils/API';
 import PostForm from './components/PostForm/PostForm';
 import EditPostForm from './components/EditPostForm/EditPostForm';
@@ -8,9 +10,8 @@ import Preloader from '@components/Preloader';
 import Box from '@mui/material/Box';
 import styles from './Content.module.css';
 
-const Content = ({ data, loaded }) => {
-  const [arrPosts, setArrPosts] = useState(data?.items);
-  const [count, setCount] = useState(data?.count);
+const Content = ({ loaded }) => {
+  const dispatch = useDispatch();
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [postTitle, setPostTitle] = useState('');
@@ -18,8 +19,7 @@ const Content = ({ data, loaded }) => {
   const [editID, setEditID] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
-  const [isFetch, setIsFetch] = useState(loaded);
-
+  const { items, count } = useSelector(state => state.postsReducer.posts) || {};
   const handleAddPost = () => {
     setOpenPostForm(true);
   };
@@ -27,17 +27,16 @@ const Content = ({ data, loaded }) => {
   const handlePostSubmit = () => {
     if (postTitle && postContent) {
       const newPost = {
-        id: arrPosts.length + 1,
+        id: items.length + 1,
         title: postTitle,
         description: postContent,
         liked: false,
       };
-      setArrPosts(state => [...state, newPost]);
       API.post('posts', newPost);
+      dispatch(addPost(newPost));
       setOpenPostForm(false);
       setPostTitle('');
       setPostContent('');
-      setCount(count + 1);
     } else {
       setOpenPostForm(true);
     }
@@ -51,14 +50,7 @@ const Content = ({ data, loaded }) => {
     };
     API.put(`posts/${editID}`, newPost);
     setOpenEditForm(false);
-    //
-    setArrPosts(state => {
-      return state.map(el =>
-        editID === el.id
-          ? { ...el, title: editTitle, description: editContent }
-          : el
-      );
-    });
+    dispatch(editPost(newPost));
   };
 
   const handlePostClose = () => {
@@ -69,29 +61,20 @@ const Content = ({ data, loaded }) => {
     setOpenEditForm(false);
   };
 
-  const setLike = obj => {
+  const setLikeHandler = obj => {
     API.put(`posts/${obj.id}`, {
       ...obj,
       liked: !obj.liked,
     });
-    setArrPosts(state => {
-      return state.map(el =>
-        obj.id === el.id ? { ...el, liked: !el.liked } : el
-      );
-    });
+    dispatch(setLike(obj.id));
   };
 
-  const deletePost = postID => {
+  const deletePostHandler = postID => {
     API.delete(`posts/${postID}`);
-    setArrPosts(state => {
-      return state.filter(post => {
-        return postID !== post.id;
-      });
-    });
-    setCount(count - 1);
+    dispatch(deletePost(postID));
   };
 
-  const editPost = post => {
+  const editPostHandler = post => {
     setOpenEditForm(true);
     setEditID(post.id);
     setEditTitle(post.title);
@@ -113,12 +96,6 @@ const Content = ({ data, loaded }) => {
   const onChangeEditContent = e => {
     setEditContent(e.target.value);
   };
-
-  useEffect(() => {
-    setArrPosts(data?.items);
-    setCount(data?.count);
-    setIsFetch(!loaded);
-  }, [data, loaded]);
 
   return (
     <>
@@ -146,9 +123,9 @@ const Content = ({ data, loaded }) => {
       />
       <h1>Simple Blog</h1>
       <div className={styles.posts}>
-        {isFetch && <Preloader />}
-        {arrPosts &&
-          [...arrPosts]
+        {!loaded && <Preloader />}
+        {items &&
+          [...items]
             .reverse()
             .map((post, ind) => (
               <Posts
@@ -157,12 +134,12 @@ const Content = ({ data, loaded }) => {
                 title={post.title}
                 description={post.description}
                 liked={post.liked}
-                setLike={() => setLike(post)}
-                deletePost={() => deletePost(post.id)}
-                editPost={() => editPost(post)}
+                setLike={() => setLikeHandler(post)}
+                deletePost={() => deletePostHandler(post.id)}
+                editPost={() => editPostHandler(post)}
               />
             ))}
-        {arrPosts && (
+        {items && (
           <Box sx={{ textAlign: 'center', fontWeight: 'bold' }}>
             Post count: {count}
           </Box>

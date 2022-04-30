@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import useAxios from '@hooks/useAxios';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
+import { selectPostByID } from '@redux/selectors';
+import { setLike, deletePost, editPost } from '@actions/postsAction';
+import API from '@utils/API';
+import EditPostForm from '../Content/components/EditPostForm';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Card from '@mui/material/Card';
@@ -29,13 +33,45 @@ const theme = createTheme({
   },
 });
 
-const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
+const ContentItem = () => {
   const [open, setOpen] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [editID, setEditID] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
   const { postID } = useParams();
-  const { data, loaded } = useAxios(`posts/${postID}`);
-  const color = liked ? 'crimson' : 'black';
+  const obj = useSelector(state => selectPostByID(state, postID)) || [];
+  const post = obj[0] || {};
+  const color = post.liked ? 'crimson' : 'black';
+  const editPostHandler = post => {
+    setOpenEditForm(true);
+    setEditID(post.id);
+    setEditTitle(post.title);
+    setEditContent(post.description);
+  };
+  const handleEditSubmit = () => {
+    const newPost = {
+      id: editID,
+      title: editTitle,
+      description: editContent,
+    };
+    API.put(`posts/${editID}`, newPost);
+    setOpenEditForm(false);
+    dispatch(editPost(newPost));
+  };
   const handleClickOpen = () => {
-    console.log('handleClickOpen');
+    setOpen(true);
+  };
+  const handleEditClose = () => {
+    setOpenEditForm(false);
+  };
+  const onChangeEditTitle = e => {
+    setEditTitle(e.target.value);
+  };
+  const onChangeEditContent = e => {
+    setEditContent(e.target.value);
   };
   const handleClose = e => {
     switch (e.target.innerText) {
@@ -43,16 +79,26 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
         setOpen(false);
         break;
       case 'OK':
-        deletePost();
+        const postID = post.id;
+        dispatch(deletePost(postID));
+        API.delete(`posts/${postID}`);
         setOpen(false);
+        navigate('/');
         break;
       default:
         break;
     }
   };
+  const setLikeHandler = obj => {
+    API.put(`posts/${obj.id}`, {
+      ...obj,
+      liked: !obj.liked,
+    });
+    dispatch(setLike(obj.id));
+  };
   return (
     <>
-      {!loaded && <Preloader />}
+      {!post && <Preloader />}
       <Box
         sx={{
           bgcolor: 'background.paper',
@@ -61,25 +107,35 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
         }}
       >
         <Container>
+          <EditPostForm
+            id={editID}
+            handleSubmit={handleEditSubmit}
+            handleClose={handleEditClose}
+            open={openEditForm}
+            title={editTitle}
+            onChangeTitle={onChangeEditTitle}
+            content={editContent}
+            onChangeContent={onChangeEditContent}
+          />
           <Card sx={{ maxWidth: 640, margin: '0 auto' }}>
             <CardMedia
               height='640'
               component='img'
-              image={data?.image}
+              image={post.image}
               alt=''
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='div'>
-                {data?.title}
+                {post.title}
               </Typography>
               <Typography variant='body2' color='text.secondary'>
-                {data?.description}
+                {post.description}
               </Typography>
             </CardContent>
             <CardActions>
               <ThemeProvider theme={theme}>
                 <IconButton
-                  onClick={editPost}
+                  onClick={() => editPostHandler(post)}
                   aria-label='edit'
                   size='large'
                   color='neutral'
@@ -95,7 +151,7 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
                   <DeleteIcon fontSize='inherit' />
                 </IconButton>
                 <IconButton
-                  onClick={setLike}
+                  onClick={() => setLikeHandler(post)}
                   aria-label='favorite'
                   size='large'
                   color='neutral'
@@ -109,7 +165,7 @@ const ContentItem = ({ liked, setLike, deletePost, editPost }) => {
                 aria-labelledby='alert-dialog-title'
                 aria-describedby='alert-dialog-description'
               >
-                <DialogTitle id='alert-dialog-title'>{`Delete post ${data?.title}?`}</DialogTitle>
+                <DialogTitle id='alert-dialog-title'>{`Delete post ${post.title}?`}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id='alert-dialog-description'>
                     You real want delete this post? Hmm
