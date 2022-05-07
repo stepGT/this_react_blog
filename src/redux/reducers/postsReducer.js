@@ -7,6 +7,7 @@ const initialState = {
 export default function postsReducer(state = initialState, action) {
   switch (action.type) {
     case 'ADD_POSTS':
+      if(action.payload.length === 0) return state;
       return {
         ...state,
         posts: action.payload,

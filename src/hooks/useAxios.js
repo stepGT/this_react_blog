@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 const useAxios = (url, method, payload) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const [loaded, setLoaded] = useState(false);
   const controllerRef = useRef(new AbortController());
